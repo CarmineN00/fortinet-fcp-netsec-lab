@@ -1,0 +1,163 @@
+Current configuration : 2081 bytes
+!
+! Last configuration change at 11:48:21 UTC Fri Aug 8 2025
+!
+version 15.5
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname BNG1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+!
+!
+bsd-client server url https://cloudsso.cisco.com/as/token.oauth2
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+no ip icmp rate-limit unreachable
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+ip name-server 8.8.8.8
+no ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+cts logging verbose
+!
+!
+!
+redundancy
+!
+no cdp log mismatch duplex
+!
+ip tcp synwait-time 5
+! 
+!
+!
+!
+!         
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 100.127.255.255 255.255.255.255
+!
+interface Ethernet0/0
+ ip address 198.51.100.1 255.255.255.252
+ ip nat inside
+ ip virtual-reassembly in
+!
+interface Ethernet0/1
+ ip address 198.51.100.5 255.255.255.252
+ ip nat inside
+ ip virtual-reassembly in
+!
+interface Ethernet0/2
+ ip address 172.16.12.1 255.255.255.252
+ ip nat inside
+ ip virtual-reassembly in
+!
+interface Ethernet0/3
+ ip address 198.51.100.25 255.255.255.252
+ ip nat inside
+ ip virtual-reassembly in
+!
+interface Ethernet1/0
+ ip address dhcp
+ ip nat outside
+ ip virtual-reassembly in
+!
+interface Ethernet1/1
+ no ip address
+ shutdown
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no ip address
+ shutdown
+!
+router bgp 64496
+ bgp log-neighbor-changes
+ redistribute connected
+ redistribute static
+ neighbor 172.16.12.2 remote-as 64496
+ default-information originate
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip nat inside source list 1 interface Ethernet1/0 overload
+ip route 198.51.100.8 255.255.255.248 198.51.100.2
+ip route 198.51.100.16 255.255.255.252 198.51.100.6
+!
+!
+!
+access-list 1 remark NAT
+access-list 1 permit any
+!         
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+line vty 0 4
+ login
+ transport input none
+!
+!
+end
