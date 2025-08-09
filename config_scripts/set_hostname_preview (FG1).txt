@@ -1,0 +1,4 @@
+config system global
+set hostname "FG1"
+end
+

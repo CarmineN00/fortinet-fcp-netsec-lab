@@ -1,0 +1,9 @@
+config system global
+    set admintimeout 479
+end
+config log fortianalyzer setting
+    set status enable
+    set server "198.51.100.10"
+    set upload-option realtime
+    set serial "FMG-VM0A17003599"
+end
