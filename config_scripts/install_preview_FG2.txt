@@ -1,8 +1,51 @@
-config system global
-    set hostname "FG2"
-end
 config system interface
     edit "port1"
-        set ip 10.2.1.1 255.255.255.0
+        set role lan
+    next
+    edit "port2"
+        set role lan
+    next
+end
+config firewall address
+    edit "LAN2"
+        set uuid 53fe7318-75e2-51f0-33b0-ce1f25e3657b
+        set subnet 10.2.2.0 255.255.255.0
+    next
+end
+config system dhcp server
+    edit 2
+        set dns-service default
+        set ntp-service default
+        set default-gateway 10.2.1.254
+        set netmask 255.255.255.0
+        set interface "port1"
+        config ip-range
+            edit 1
+                set start-ip 10.2.1.1
+                set end-ip 10.2.1.253
+            next
+        end
+        set timezone-option default
+    next
+    edit 3
+        set dns-service default
+        set ntp-service default
+        set default-gateway 10.2.2.254
+        set netmask 255.255.255.0
+        set interface "port2"
+        config ip-range
+            edit 1
+                set start-ip 10.2.2.1
+                set end-ip 10.2.2.253
+            next
+        end
+        set timezone-option default
+    next
+end
+config firewall policy
+    edit 1
+        set uuid b7e2f8da-7520-51f0-1d41-41fc84087fb3
+        set srcintf "port1" "port2"
+        set srcaddr "LAN1" "LAN2"
     next
 end

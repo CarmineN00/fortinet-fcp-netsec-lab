@@ -1,0 +1,14 @@
+config system global
+set hostname "FG1"
+end
+config system interface
+edit "port1"
+set ip "10.1.1.254/24"
+set allowaccess ping
+next
+edit "port3"
+set ip "10.1.2.254/24"
+set allowaccess ping
+next
+end
+

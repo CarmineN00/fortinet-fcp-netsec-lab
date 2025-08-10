@@ -1,5 +1,10 @@
 config system interface
-edit port1
+edit "$(lan1intf)"
 set ip "10.$(branch_id).1.254/24"
 set allowaccess ping
+next
+edit "$(lan2intf)"
+set ip "10.$(branch_id).2.254/24"
+set allowaccess ping
+next
 end
