@@ -1,0 +1,14 @@
+config dynamic interface
+edit WAN
+set default-mapping enable
+set defmap-intf WAN
+config dynamic_mapping
+edit "FG1"-"root"
+set local-intf port2
+next
+edit "FG2"-"root"
+set local-intf port5
+next
+end
+next
+end

@@ -1,0 +1,18 @@
+config firewall address
+    edit LAN2
+    set subnet 10.0.2.0/24
+        config dynamic_mapping
+            edit "FG1"-"root"
+                set subnet 10.1.2.0/24
+            next
+            edit "FG2"-"root"
+                set subnet 10.2.2.0/24
+            next
+    end
+    next
+end
+config firewall policy
+    edit 1
+         set srcaddr LAN2 LAN1
+         set dstaddr all
+end
