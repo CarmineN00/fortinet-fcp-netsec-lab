@@ -1,0 +1,30 @@
+#!
+
+proc fgt {cmd} {
+    puts "$cmd"
+    puts [exec "$cmd\n" "# " 15]
+}
+
+set server_dns_list {
+    {"GoogleDNS" "8.8.8.8"}
+    {"CloudflareDNS" "1.1.1.1"}
+    {"OpenDNS" "208.67.222.222"}
+    {"Quad9" "9.9.9.9"}
+}
+
+foreach address $server_dns_list {
+    set name [lindex $address 0]
+    set ip [lindex $address 1]
+
+    fgt "config firewall address"
+    fgt "edit $name"
+    fgt "set subnet $ip 255.255.255.255"
+    fgt "next"
+    fgt "end"
+
+    fgt "config firewall addrgrp"
+    fgt "edit PublicDNS"
+    fgt "append member $name"
+    fgt "next" 
+    fgt "end"
+}

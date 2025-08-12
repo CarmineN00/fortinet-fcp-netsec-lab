@@ -4,4 +4,4 @@
 
 ## Topology
 
-![topology](/images/topology.png)
+![topology](topology.png)

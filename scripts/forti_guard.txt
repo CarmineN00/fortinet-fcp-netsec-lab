@@ -1,0 +1,10 @@
+config system central-management
+set type fortimanager
+config server-list
+    edit 1
+         set server-type update rating
+         set server-address 198.51.100.10
+     next
+end
+set include-default-servers disable
+end
