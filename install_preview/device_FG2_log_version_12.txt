@@ -1,0 +1,68 @@
+
+
+Starting log (Run on device)
+
+
+Start installing
+FG2 $  config system interface
+FG2 (interface) $  edit "s2s"
+FG2 (s2s) $  set vdom "root"
+FG2 (s2s) $  set type tunnel
+FG2 (s2s) $  set snmp-index 116
+FG2 (s2s) $  set interface "port5"
+FG2 (s2s) $  next
+FG2 (interface) $  end
+FG2 $  config firewall address
+FG2 (address) $  edit "Remote_LAN1"
+FG2 (Remote_LAN1) $  set uuid 73010e06-7876-51f0-f70d-f8db2a78177b
+FG2 (Remote_LAN1) $  set subnet 10.1.1.0 255.255.255.0
+FG2 (Remote_LAN1) $  next
+FG2 (address) $  end
+FG2 $  config vpn ipsec phase1-interface
+FG2 (phase1-interface) $  edit "s2s"
+FG2 (s2s) $  set interface "port5"
+FG2 (s2s) $  set ike-version 2
+FG2 (s2s) $  set nattraversal disable
+FG2 (s2s) $  set proposal aes128-sha256 aes256-sha256 aes128gcm-prfsha256 aes256gcm-prfsha384 chacha20poly1305-prfsha256
+FG2 (s2s) $  set peertype any
+FG2 (s2s) $  set remote-gw 198.51.100.17
+FG2 (s2s) $  set net-device disable
+FG2 (s2s) $  set psksecret **********
+FG2 (s2s) $  next
+FG2 (phase1-interface) $  end
+FG2 $  config vpn ipsec phase2-interface
+FG2 (phase2-interface) $  edit "s2s"
+FG2 (s2s) $  set phase1name "s2s"
+FG2 (s2s) $  set proposal aes128-sha1 aes256-sha1 aes128-sha256 aes256-sha256 aes128gcm aes256gcm chacha20poly1305
+FG2 (s2s) $  set src-subnet 10.2.1.0 255.255.255.0
+FG2 (s2s) $  set dst-subnet 10.1.1.0 255.255.255.0
+FG2 (s2s) $  next
+FG2 (phase2-interface) $  end
+FG2 $  config firewall policy
+FG2 (policy) $  edit 2
+FG2 (2) $  set name "FG1_to_FG2"
+FG2 (2) $  set uuid a943366a-7876-51f0-4eeb-d1aa355371e7
+FG2 (2) $  set action accept
+FG2 (2) $  set srcintf "port1"
+FG2 (2) $  set dstintf "s2s"
+FG2 (2) $  set srcaddr "LAN1"
+FG2 (2) $  set dstaddr "Remote_LAN1"
+FG2 (2) $  set schedule "always"
+FG2 (2) $  set service "ALL"
+FG2 (2) $  set logtraffic all
+FG2 (2) $  next
+FG2 (policy) $  move 2 after 1073741825
+FG2 (policy) $  end
+FG2 $  config router static
+FG2 (static) $  edit 2
+FG2 (2) $  set dst 10.1.1.0 255.255.255.0
+FG2 (2) $  set device "s2s"
+FG2 (2) $  next
+FG2 (static) $  end
+
+
+---> generating verification report
+<--- done generating verification report
+
+
+install finished

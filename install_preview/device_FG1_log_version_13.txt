@@ -1,0 +1,93 @@
+
+
+Starting log (Run on device)
+
+
+Start installing
+FG1 $  config system interface
+FG1 (interface) $  edit "s2s"
+FG1 (s2s) $  set vdom "root"
+FG1 (s2s) $  set type tunnel
+FG1 (s2s) $  set snmp-index 116
+FG1 (s2s) $  set interface "port2"
+FG1 (s2s) $  next
+FG1 (interface) $  end
+FG1 $  config firewall address
+FG1 (address) $  edit "Remote_LAN1"
+FG1 (Remote_LAN1) $  set uuid 7300ba8c-7876-51f0-4acd-da73529e1a99
+FG1 (Remote_LAN1) $  set subnet 10.2.1.0 255.255.255.0
+FG1 (Remote_LAN1) $  next
+FG1 (address) $  end
+FG1 $  config vpn ipsec phase1-interface
+FG1 (phase1-interface) $  edit "s2s"
+FG1 (s2s) $  set interface "port2"
+FG1 (s2s) $  set ike-version 2
+FG1 (s2s) $  set nattraversal disable
+FG1 (s2s) $  set proposal aes128-sha256 aes256-sha256 aes128gcm-prfsha256 aes256gcm-prfsha384 chacha20poly1305-prfsha256
+FG1 (s2s) $  set peertype any
+FG1 (s2s) $  set remote-gw 198.51.100.21
+FG1 (s2s) $  set net-device disable
+FG1 (s2s) $  set psksecret **********
+FG1 (s2s) $  next
+FG1 (phase1-interface) $  end
+FG1 $  config vpn ipsec phase2-interface
+FG1 (phase2-interface) $  edit "s2s"
+FG1 (s2s) $  set phase1name "s2s"
+FG1 (s2s) $  set proposal aes128-sha1 aes256-sha1 aes128-sha256 aes256-sha256 aes128gcm aes256gcm chacha20poly1305
+FG1 (s2s) $  set src-subnet 10.1.1.0 255.255.255.0
+FG1 (s2s) $  set dst-subnet 10.2.1.0 255.255.255.0
+FG1 (s2s) $  next
+FG1 (phase2-interface) $  end
+FG1 $  config firewall policy
+FG1 (policy) $  edit 2
+FG1 (2) $  set name "FG1_to_FG2"
+FG1 (2) $  set uuid a943366a-7876-51f0-4eeb-d1aa355371e7
+FG1 (2) $  set action accept
+FG1 (2) $  set srcintf "port1"
+FG1 (2) $  set dstintf "s2s"
+FG1 (2) $  set srcaddr "LAN1"
+FG1 (2) $  set dstaddr "Remote_LAN1"
+FG1 (2) $  set schedule "always"
+FG1 (2) $  set service "ALL"
+FG1 (2) $  set logtraffic all
+FG1 (2) $  next
+FG1 (policy) $  edit 3
+FG1 (3) $  set name "LAN1_to_LAN2"
+FG1 (3) $  set uuid 33bc5e0c-7877-51f0-df52-101a7b77ccdb
+FG1 (3) $  set action accept
+FG1 (3) $  set srcintf "port1"
+FG1 (3) $  set dstintf "port3"
+FG1 (3) $  set srcaddr "LAN1"
+FG1 (3) $  set dstaddr "LAN2"
+FG1 (3) $  set schedule "always"
+FG1 (3) $  set service "ALL"
+FG1 (3) $  set logtraffic all
+FG1 (3) $  next
+FG1 (policy) $  edit 4
+FG1 (4) $  set name "LAN2_to_LAN1"
+FG1 (4) $  set uuid 35b5570e-7877-51f0-3f1a-3b9ec386b664
+FG1 (4) $  set action accept
+FG1 (4) $  set srcintf "port3"
+FG1 (4) $  set dstintf "port1"
+FG1 (4) $  set srcaddr "LAN2"
+FG1 (4) $  set dstaddr "LAN1"
+FG1 (4) $  set schedule "always"
+FG1 (4) $  set service "ALL"
+FG1 (4) $  set logtraffic all
+FG1 (4) $  next
+FG1 (policy) $  move 1 after 2
+FG1 (policy) $  move 1074741825 after 4
+FG1 (policy) $  end
+FG1 $  config router static
+FG1 (static) $  edit 2
+FG1 (2) $  set dst 10.2.1.0 255.255.255.0
+FG1 (2) $  set device "s2s"
+FG1 (2) $  next
+FG1 (static) $  end
+
+
+---> generating verification report
+<--- done generating verification report
+
+
+install finished
